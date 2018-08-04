@@ -4,6 +4,7 @@ from planner import RoutePlanner
 from simulator import Simulator
 import operator
 import datetime
+import math
 
 
 class LearningAgent(Agent):
@@ -25,6 +26,7 @@ class LearningAgent(Agent):
         ## TO DO ##
         ###########
         # Set any additional class parameters as needed
+        self.t = 1
 
     def reset(self, destination=None, testing=False):
         """ The reset function is called at the beginning of each trial.
@@ -44,7 +46,8 @@ class LearningAgent(Agent):
             self.epsilon = 0
             self.alpha = 0
         else:
-            self.epsilon = 0.999 * self.epsilon
+            self.epsilon = math.exp(-0.01 * self.t)
+            self.t += 1
 
         return None
 

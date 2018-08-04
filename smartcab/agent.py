@@ -46,7 +46,7 @@ class LearningAgent(Agent):
             self.epsilon = 0
             self.alpha = 0
         else:
-            self.epsilon = math.exp(-0.001 * self.t)
+            self.epsilon = math.exp(-0.01 * self.t)
             self.t += 1
 
         return None
@@ -65,7 +65,7 @@ class LearningAgent(Agent):
         ## TO DO ##
         ###########
         # Set 'state' as a tuple of relevant data for the agent        
-        state = (waypoint, inputs['light'], inputs['right'], inputs['left'], inputs['oncoming'])
+        state = (waypoint, inputs['light'], inputs['left'], inputs['oncoming'])
 
         return state
 

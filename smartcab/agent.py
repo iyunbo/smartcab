@@ -46,10 +46,10 @@ class LearningAgent(Agent):
             self.epsilon = 0
             self.alpha = 0
         else:
-            self.epsilon = math.exp(-0.01 * self.t)
+            self.epsilon = math.exp(-0.001 * self.t)
             self.t += 1
             if self.alpha > 0.1:
-                self.alpha -= 0.01
+                self.alpha -= 0.001
 
         return None
 

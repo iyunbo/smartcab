@@ -46,10 +46,10 @@ class LearningAgent(Agent):
             self.epsilon = 0
             self.alpha = 0
         else:
-            self.epsilon = 0.995 * self.epsilon
+            self.epsilon = math.cos(0.9 * self.t)
             self.t += 1
             if self.alpha > 0.001:
-                self.alpha *= 0.99
+                self.alpha *= 0.999
 
         return None
 

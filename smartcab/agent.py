@@ -46,7 +46,7 @@ class LearningAgent(Agent):
             self.epsilon = 0
             self.alpha = 0
         else:
-            self.epsilon = math.cos(0.005 * self.t)
+            self.epsilon = math.cos(0.002 * self.t)
             self.t += 1
             if self.alpha > 0.1:
                 self.alpha = 0.7 * math.exp(-0.005 * self.t)
@@ -113,7 +113,6 @@ class LearningAgent(Agent):
         ## TO DO ##
         ###########
         # When not learning, choose a random action
-        random.seed(41)
         random_index = random.randint(1, len(self.valid_actions) - 1)
         if not self.learning:
             action = self.valid_actions[random_index]

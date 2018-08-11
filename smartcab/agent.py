@@ -46,7 +46,7 @@ class LearningAgent(Agent):
             self.epsilon = 0
             self.alpha = 0
         else:
-            self.epsilon = math.cos(0.0015 * self.t)
+            self.epsilon = math.cos(0.0018 * self.t)
             self.t += 1
 
         return None
@@ -125,17 +125,18 @@ class LearningAgent(Agent):
                 maxQ = self.get_maxQ(state)
                 good_actions = []
                 for act in self.valid_actions:
-                    if abs(self.Q[state][act] - maxQ) <= 0.00001:
+                    if abs(self.Q[state][act] - maxQ) <= 0.0001:
                         good_actions.append(act)
-                act_count = len(good_actions)
-                if act_count == 0:
+
+                action_count = len(good_actions)
+                if action_count == 0:
                     raise ValueError("check the get_maxQ function, something is inconsistent")
-                if act_count == 1:
+                if action_count == 1:
                     # only one action to consider
                     action = good_actions[0]
                 else:
-                    # randomly chose an action with max Q value in order to encourage exploration
-                    action = good_actions[random.randint(0, act_count - 1)]
+                    # randomly chose an action with max Q-value in order to encourage exploration
+                    action = good_actions[random.randint(0, action_count - 1)]
 
         return action
 

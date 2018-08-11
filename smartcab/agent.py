@@ -46,10 +46,10 @@ class LearningAgent(Agent):
             self.epsilon = 0
             self.alpha = 0
         else:
-            self.epsilon = math.cos(0.001 * self.t)
+            self.epsilon = math.cos(0.01 * self.t)
             self.t += 1
-            if self.alpha > 0.1:
-                self.alpha = 0.7 * math.exp(-0.005 * self.t)
+            # if self.alpha > 0.1:
+            #     self.alpha = 0.7 * math.exp(-0.005 * self.t)
 
         return None
 
@@ -67,7 +67,7 @@ class LearningAgent(Agent):
         ## TO DO ##
         ###########
         # Set 'state' as a tuple of relevant data for the agent        
-        state = (waypoint, inputs['light'], inputs['left'], inputs['oncoming'])
+        state = (waypoint, inputs['light'], inputs['right'], inputs['left'], inputs['oncoming'])
 
         return state
 
@@ -81,7 +81,7 @@ class LearningAgent(Agent):
         # Calculate the maximum Q-value of all actions for a given state
         action_to_q = self.Q[state]
 
-        maxQ = max(action_to_q.iteritems(), key=operator.itemgetter(1))
+        maxQ = max(action_to_q.iteritems(), key=operator.itemgetter(1))[0]
 
         return maxQ
 
@@ -94,10 +94,11 @@ class LearningAgent(Agent):
         # When learning, check if the 'state' is not in the Q-table
         # If it is not, create a new dictionary for that state
         #   Then, for each action available, set the initial Q-value to 0.0
-        if state not in self.Q:
-            self.Q[state] = dict()
-            for action in self.valid_actions:
-                self.Q[state][action] = 0.0
+        if self.learning:
+            if state not in self.Q:
+                self.Q[state] = dict()
+                for action in self.valid_actions:
+                    self.Q[state][action] = 0.0
 
         return
 
@@ -113,17 +114,17 @@ class LearningAgent(Agent):
         ## TO DO ##
         ###########
         # When not learning, choose a random action
-        random_index = random.randint(1, len(self.valid_actions) - 1)
+        random_index = random.randint(0, len(self.valid_actions) - 1)
         if not self.learning:
             action = self.valid_actions[random_index]
         else:
-            random_int = random.randint(1, 100)
+            random_val = random.random()
             # When learning, choose a random action with 'epsilon' probability
-            if random_int <= self.epsilon * 100:
+            if random_val <= self.epsilon:
                 action = self.valid_actions[random_index]
             #   Otherwise, choose an action with the highest Q-value for the current state
             else:
-                action = self.get_maxQ(state)[0]
+                action = self.get_maxQ(state)
 
         return action
 
@@ -137,8 +138,9 @@ class LearningAgent(Agent):
         ###########
         # When learning, implement the value iteration update rule
         #   Use only the learning rate 'alpha' (do not use the discount factor 'gamma')
-        action_to_q = self.Q[state]
-        action_to_q[action] = action_to_q[action] * (1 - self.alpha) + (reward + self.get_maxQ(state)[1]) * self.alpha
+        if self.learning:
+            action_to_q = self.Q[state]
+            action_to_q[action] = action_to_q[action] * (1 - self.alpha) + reward * self.alpha
         return
 
     def update(self):
@@ -173,7 +175,7 @@ def run():
     #   learning   - set to True to force the driving agent to use Q-learning
     #    * epsilon - continuous value for the exploration factor, default is 1
     #    * alpha   - continuous value for the learning rate, default is 0.5
-    agent = env.create_agent(LearningAgent, learning=True, alpha=0.6)
+    agent = env.create_agent(LearningAgent, learning=True, alpha=0.5)
 
     ##############
     # Follow the driving agent
@@ -195,7 +197,7 @@ def run():
     # Flags:
     #   tolerance  - epsilon tolerance before beginning testing, default is 0.05 
     #   n_test     - discrete number of testing trials to perform, default is 0
-    sim.run(n_test=100, tolerance=0.001)
+    sim.run(n_test=100, tolerance=0.01)
 
 
 if __name__ == '__main__':

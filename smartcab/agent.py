@@ -122,8 +122,20 @@ class LearningAgent(Agent):
                 action = self.valid_actions[random_index]
             #   Otherwise, choose an action with the highest Q-value for the current state
             else:
-                max_q = self.get_maxQ(state)
-                action =
+                maxQ = self.get_maxQ(state)
+                good_actions = []
+                for act in self.valid_actions:
+                    if abs(self.Q[state][act] - maxQ) <= 0.00001:
+                        good_actions.append(act)
+                act_count = len(good_actions)
+                if act_count == 0:
+                    raise ValueError("check the get_maxQ function, something is inconsistent")
+                if act_count == 1:
+                    # only one action to consider
+                    action = good_actions[0]
+                else:
+                    # randomly chose an action with max Q value in order to encourage exploration
+                    action = good_actions[random.randint(0, act_count - 1)]
 
         return action
 

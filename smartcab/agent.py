@@ -46,7 +46,7 @@ class LearningAgent(Agent):
             self.epsilon = 0
             self.alpha = 0
         else:
-            self.epsilon = math.cos(0.0018 * self.t)
+            self.epsilon = math.cos(0.0016 * self.t)
             self.t += 1
 
         return None

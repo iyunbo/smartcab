@@ -128,15 +128,7 @@ class LearningAgent(Agent):
                     if abs(self.Q[state][act] - maxQ) <= 0.0001:
                         good_actions.append(act)
 
-                action_count = len(good_actions)
-                if action_count == 0:
-                    raise ValueError("check the get_maxQ function, something is inconsistent")
-                if action_count == 1:
-                    # only one action to consider
-                    action = good_actions[0]
-                else:
-                    # randomly chose an action with max Q-value in order to encourage exploration
-                    action = good_actions[random.randint(0, action_count - 1)]
+                action = random.choice(good_actions)
 
         return action
 
@@ -151,8 +143,7 @@ class LearningAgent(Agent):
         # When learning, implement the value iteration update rule
         #   Use only the learning rate 'alpha' (do not use the discount factor 'gamma')
         if self.learning:
-            action_to_q = self.Q[state]
-            action_to_q[action] = action_to_q[action] * (1 - self.alpha) + reward * self.alpha
+            self.Q[state][action] = self.Q[state][action] * (1 - self.alpha) + reward * self.alpha
         return
 
     def update(self):
@@ -179,7 +170,7 @@ def run():
     #   verbose     - set to True to display additional output from the simulation
     #   num_dummies - discrete number of dummy agents in the environment, default is 100
     #   grid_size   - discrete number of intersections (columns, rows), default is (8, 6)
-    env = Environment(verbose=False)
+    env = Environment(verbose=True)
 
     ##############
     # Create the driving agent

@@ -112,22 +112,16 @@ class LearningAgent(Agent):
         ## TO DO ##
         ###########
         # When not learning, choose a random action
-        random_index = random.randint(0, len(self.valid_actions) - 1)
         if not self.learning:
-            action = self.valid_actions[random_index]
+            action = random.choice(self.valid_actions)
         else:
-            random_val = random.random()
             # When learning, choose a random action with 'epsilon' probability
-            if random_val <= self.epsilon:
-                action = self.valid_actions[random_index]
-            #   Otherwise, choose an action with the highest Q-value for the current state
+            if random.random() <= self.epsilon:
+                action = random.choice(self.valid_actions)
             else:
-                maxQ = self.get_maxQ(state)
-                good_actions = []
-                for act in self.valid_actions:
-                    if abs(self.Q[state][act] - maxQ) <= 0.0001:
-                        good_actions.append(act)
-
+                #   Otherwise, choose an action with the highest Q-value for the current state
+                good_actions = filter(lambda act: abs(self.Q[state][act] - self.get_maxQ(state)) <= 0.0001,
+                                      self.valid_actions)
                 action = random.choice(good_actions)
 
         return action
